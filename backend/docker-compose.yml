@@ -1,24 +1,23 @@
-# docker-compose.yml
 version: '3.8'
 
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: kos_postgres
+    container_name: ezkost_postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: kos_management
+      POSTGRES_DB: ezkost
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - kos_network
+      - ezkost_network
 
   api:
     build: .
-    container_name: kos_api
+    container_name: ezkost_api
     ports:
       - "8080:8080"
     environment:
@@ -26,18 +25,18 @@ services:
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: postgres
-      DB_NAME: kos_management
+      DB_NAME: ezkost_management
       SERVER_PORT: 8080
       JWT_SECRET: your-super-secret-key-change-this
     depends_on:
       - postgres
     networks:
-      - kos_network
+      - ezkost_network
     restart: unless-stopped
 
 volumes:
   postgres_data:
 
 networks:
-  kos_network:
+  ezkost_network:
     driver: bridge
